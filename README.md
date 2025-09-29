@@ -21,6 +21,12 @@ pip install -r requirements.txt
 
 ## Usage
 
+## Disclaimer
+
+All GIFs used with this tool **must be 128x128 pixels** in size. Using larger or differently sized GIFs may result in corrupted firmware, failed patching, or unexpected behavior on the badge.
+
+
+
 ### 1. Place the Firmware Binary
 If you have your own badge, you can extract and back up its firmware before making any changes. Connect the badge and run:
 
