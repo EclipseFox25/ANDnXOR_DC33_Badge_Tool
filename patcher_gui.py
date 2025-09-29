@@ -79,6 +79,7 @@ class FSExplorerApp:
         bar.pack(fill="x")
         tk.Button(bar, text="Open BIN", command=self.open_bin).pack(side="left")
         tk.Button(bar, text="Add", command=self.add_file).pack(side="left")
+        tk.Button(bar, text="Delete", command=self.delete_selected).pack(side="left")
         tk.Button(bar, text="Extract Selected", command=self.extract_selected).pack(side="left")
         tk.Button(bar, text="Save", command=self.save_as).pack(side="left")
 
@@ -154,6 +155,36 @@ class FSExplorerApp:
         self.dirty = True
         self.reload_tree()
         self.set_status(f"Added {dst}")
+    
+    def delete_selected(self):
+        if not self.fs:
+            return
+
+        selected = self.tree.selection()
+        if not selected:
+            self.set_status("No files selected for deletion.")
+            return
+
+        deleted_count = 0
+        for item in selected:
+            # Get name from either `text` or first column
+            raw_name = self.tree.item(item, "text")
+            if not raw_name:
+                vals = self.tree.item(item, "values")
+                raw_name = vals[0] if vals else ""
+
+            # Normalize path
+            file_path = raw_name if raw_name.startswith("/") else f"/{raw_name}"
+
+            try:
+                self.fs.remove(file_path)
+                deleted_count += 1
+            except Exception as e:
+                self.set_status(f"Error deleting {file_path}: {e}")
+
+        self.dirty = True
+        self.reload_tree()
+        self.set_status(f"Deleted {deleted_count} file(s)")
 
     def extract_selected(self):
         if not self.fs:
@@ -196,7 +227,7 @@ class FSExplorerApp:
         self.dirty = False
         self.set_status(f"Saved {out}")
 
-    # ✅ Drag logic (no rectangle)
+    # Drag logic (no rectangle)
     def start_drag(self, event):
         self.drag_start_y = event.y
         self.tree.selection_remove(self.tree.selection())
