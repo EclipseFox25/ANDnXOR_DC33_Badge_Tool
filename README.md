@@ -21,7 +21,7 @@ pip install -r requirements.txt
 
 ## Usage
 
-## Disclaimer
+### Disclaimer
 
 All GIFs used with this tool **must be 128x128 pixels** in size. Using larger or differently sized GIFs may result in corrupted firmware, failed patching, or unexpected behavior on the badge.
 
